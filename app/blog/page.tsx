@@ -8,11 +8,12 @@ import PostCard from "@/components/PostCard";
 import Sidebar from "@/components/Sidebar";
 import styles from "../page.module.css";
 
-import { FaSearch } from "react-icons/fa";
-
-/* =========================
-   TYPES
-========================= */
+// Ganti FaSearch dari react-icons dengan SVG inline kecil — hemat ~150KB
+const IconSearch = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+  </svg>
+)
 
 interface Post {
   id: string;
@@ -27,51 +28,31 @@ interface Post {
   _sortTime: number;
 }
 
-/* =========================
-   BLOG CONTENT
-========================= */
-
 function BlogContent() {
   const searchParams = useSearchParams();
-
   const category = searchParams.get("category");
   const tag = searchParams.get("tag");
-
   const [allPosts, setAllPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
-  /* =========================
-     FETCH POSTS
-  ========================= */
-
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
-
       try {
         const snap = await getDocs(collection(db, "posts"));
-
         const data = snap.docs
           .map((doc) => {
             const d = doc.data();
-
             return {
               ...d,
-
               id: doc.id,
-
-              publishedAt:
-                d.publishedAt?.toDate() || d.createdAt?.toDate() || new Date(),
-
+              publishedAt: d.publishedAt?.toDate() || d.createdAt?.toDate() || new Date(),
               _sortTime: d.publishedAt?.seconds || d.createdAt?.seconds || 0,
             } as Post;
           })
-
           .filter((p) => p.published === true)
-
           .sort((a, b) => b._sortTime - a._sortTime);
-
         setAllPosts(data);
       } catch (err: any) {
         console.error("Blog fetch error:", err.message);
@@ -79,64 +60,31 @@ function BlogContent() {
         setLoading(false);
       }
     };
-
     fetchPosts();
   }, []);
 
-  /* =========================
-     FILTER POSTS
-  ========================= */
-
   const filteredPosts = allPosts.filter((p) => {
     const matchesCategory = !category || p.category === category;
-
     const matchesTag = !tag || (Array.isArray(p.tags) && p.tags.includes(tag));
-
     const matchesSearch =
       p.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.excerpt?.toLowerCase().includes(searchQuery.toLowerCase());
-
     return matchesCategory && matchesTag && matchesSearch;
   });
 
-  /* =========================
-     RENDER
-  ========================= */
-
   return (
     <div className={styles.page}>
-      {/* =========================
-          HERO
-      ========================= */}
-
       <div className={styles.heroBanner}>
         <span className={styles.heroText}>
-          {category
-            ? category.toUpperCase()
-            : tag
-              ? `#${tag.toUpperCase()}`
-              : "NIKAHAGAMA BLOG"}
+          {category ? category.toUpperCase() : tag ? `#${tag.toUpperCase()}` : "NIKAHAGAMA BLOG"}
         </span>
       </div>
 
-      {/* =========================
-          MAIN LAYOUT
-      ========================= */}
-
       <div className={styles.layout}>
-        {/* =========================
-            MAIN CONTENT
-        ========================= */}
-
         <main className={styles.main}>
-          {/* =========================
-              SEARCH BAR
-          ========================= */}
-
           <div className={styles.searchContainer}>
             <div className={styles.searchWrapper}>
-              <FaSearch className={styles.searchIcon} />
-
+              <IconSearch />
               <input
                 type="text"
                 placeholder="Cari artikel menarik..."
@@ -147,10 +95,6 @@ function BlogContent() {
             </div>
           </div>
 
-          {/* =========================
-              LOADING STATE
-          ========================= */}
-
           {loading ? (
             <div className={styles.loadingState}>
               <div className={styles.skeleton} />
@@ -158,20 +102,11 @@ function BlogContent() {
               <div className={styles.skeleton} />
             </div>
           ) : filteredPosts.length === 0 ? (
-            /* =========================
-                EMPTY STATE
-            ========================= */
-
             <div className={styles.emptyState}>
               <h3>Tidak ada artikel ditemukan</h3>
-
               <p>Coba gunakan kata kunci lain atau kategori berbeda.</p>
             </div>
           ) : (
-            /* =========================
-                POST LIST
-            ========================= */
-
             <div className={styles.postList}>
               {filteredPosts.map((post) => (
                 <PostCard
@@ -189,10 +124,6 @@ function BlogContent() {
           )}
         </main>
 
-        {/* =========================
-            SIDEBAR
-        ========================= */}
-
         <aside className={styles.sidebar}>
           <Suspense fallback={null}>
             <Sidebar />
@@ -202,10 +133,6 @@ function BlogContent() {
     </div>
   );
 }
-
-/* =========================
-   PAGE EXPORT
-========================= */
 
 export default function BlogPage() {
   return (
