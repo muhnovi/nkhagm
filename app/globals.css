@@ -48,15 +48,11 @@
 }
 
 [data-font="grotesk"] { --font-active: var(--font-primary); }
-[data-font="mono"] { --font-active: var(--font-mono); }
+[data-font="mono"]    { --font-active: var(--font-mono); }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* Fix warning Next.js: gunakan data-scroll-behavior bukan scroll-behavior di html */
-html {
-  font-size: 16px;
-  /* scroll-behavior dipindah ke body agar tidak conflict dengan Next.js router */
-}
+html { font-size: 16px; }
 
 body {
   background: var(--bg);
@@ -69,17 +65,9 @@ body {
 }
 
 a { color: inherit; text-decoration: none; }
-
 img { max-width: 100%; height: auto; display: block; }
-
-/* Elemen yang di luar viewport tidak perlu di-render dulu — hemat CPU */
-footer {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 200px;
-}
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--fg); }
-
 ::selection { background: var(--fg); color: var(--bg); }
