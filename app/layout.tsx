@@ -14,7 +14,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="id" data-font="grotesk" scroll-behavior="smooth">
+    <html lang="id" data-font="grotesk">
       <body>
         <FontProvider>
           <Navbar />
