@@ -1,65 +1,132 @@
-import Image from "next/image";
+'use client'
+import './globals.css'
+import { useEffect, useState, Suspense } from 'react'
+import { collection, getDocs } from 'firebase/firestore'
+import { db } from '@/lib/firebase'
+import PostCard from '@/components/PostCard'
+import Sidebar from '@/components/Sidebar'
+import styles from './page.module.css'
 
-export default function Home() {
+// Definisikan Interface agar TypeScript mengenali struktur data kita
+interface Post {
+  id: string;
+  title: string;
+  published: boolean;
+  publishedAt: Date;
+  category?: string;
+  tags?: string[];
+  slug?: string;
+  excerpt?: string;
+  coverImage?: string;
+  _sortTime: number;
+}
+
+export default function HomePage() {
+  const [posts, setPosts] = useState<Post[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        // 1. Ambil data dari koleksi 'posts'
+        const snap = await getDocs(collection(db, 'posts'))
+        
+        const data = snap.docs
+          .map(doc => {
+            const d = doc.data()
+            return {
+              ...d, // Memasukkan semua field dari Firestore (termasuk 'published')
+              id: doc.id,
+              // Konversi Timestamp ke Date JS
+              publishedAt: d.publishedAt?.toDate() || d.createdAt?.toDate() || new Date(),
+              _sortTime: d.publishedAt?.seconds || d.createdAt?.seconds || 0,
+            } as Post // Cast ke interface Post
+          })
+          // 2. Filter hanya yang sudah di-set published: true
+          .filter(p => p.published === true)
+          // 3. Urutkan dari yang terbaru
+          .sort((a, b) => b._sortTime - a._sortTime)
+          .slice(0, 10)
+
+        setPosts(data)
+      } catch (err: any) {
+        console.error('Fetch posts error:', err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPosts()
+  }, [])
+
+  const featured = posts[0]
+  const rest = posts.slice(1)
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className={styles.page}>
+      {/* Banner Utama */}
+      <div className={styles.heroBanner}>
+        <span className={styles.heroText}>BLOG &amp; BERITA TERKINI</span>
+      </div>
+
+      <div className={styles.layout}>
+        <div className={styles.main}>
+          {loading ? (
+            /* State Loading / Skeleton */
+            <div className={styles.loadingState}>
+              <div className={styles.skeleton} style={{ height: '280px' }} />
+              <div className={styles.skeleton} style={{ height: '90px', marginTop: '1rem' }} />
+              <div className={styles.skeleton} style={{ height: '90px', marginTop: '0.75rem' }} />
+            </div>
+          ) : posts.length === 0 ? (
+            /* State Jika Kosong */
+            <div className={styles.emptyState}>
+              <p>Belum ada artikel yang dipublikasikan.</p>
+              <p style={{ fontSize: '0.75rem', marginTop: '0.5rem', opacity: 0.6 }}>
+                Tambahkan artikel dari admin dan pastikan status sudah LIVE (published: true).
+              </p>
+            </div>
+          ) : (
+            /* Render Artikel */
+            <>
+              {featured && (
+                <PostCard
+                  slug={featured.slug || featured.id}
+                  title={featured.title}
+                  excerpt={featured.excerpt || ''}
+                  coverImage={featured.coverImage}
+                  publishedAt={featured.publishedAt}
+                  category={featured.category || 'Berita'}
+                  tags={featured.tags}
+                  featured
+                />
+              )}
+              
+              <div className={styles.postList}>
+                {rest.map((post) => (
+                  <PostCard
+                    key={post.id}
+                    slug={post.slug || post.id}
+                    title={post.title}
+                    excerpt={post.excerpt || ''}
+                    coverImage={post.coverImage}
+                    publishedAt={post.publishedAt}
+                    category={post.category || 'Berita'}
+                    tags={post.tags}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+
+        {/* WAJIB: Sidebar menggunakan useSearchParams, 
+          maka harus dibungkus Suspense agar build sukses 
+        */}
+        <Suspense fallback={<div className={styles.loadingSidebar}>Memuat Sidebar...</div>}>
+          <Sidebar />
+        </Suspense>
+      </div>
     </div>
-  );
+  )
 }

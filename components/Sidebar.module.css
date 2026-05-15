@@ -1,0 +1,148 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.widget {
+  border: 1px solid var(--fg);
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.widgetTitle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.bio {
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+.socials {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.socials a {
+  font-size: 1rem;
+  color: var(--muted);
+  transition: color 0.15s;
+}
+
+.socials a:hover { color: var(--fg); }
+
+.subscribeForm {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--fg);
+}
+
+.emailInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.78rem;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: inherit;
+}
+
+.subscribeBtn {
+  background: var(--fg);
+  color: var(--bg);
+  border: none;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: opacity 0.15s;
+}
+
+.subscribeBtn:hover { opacity: 0.7; }
+
+.success {
+  font-size: 0.8rem;
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.catList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.catLink {
+  font-size: 0.8rem;
+  display: block;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  transition: color 0.15s, padding-left 0.15s;
+}
+
+.catLink:hover {
+  color: var(--fg);
+  padding-left: 0.5rem;
+}
+
+.catActive {
+  color: var(--fg) !important;
+  font-weight: 700;
+  padding-left: 0.5rem;
+  border-left: 2px solid var(--fg);
+}
+
+.tagCloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tagBadge {
+  font-size: 0.7rem;
+  border: 1px solid var(--fg);
+  padding: 0.2rem 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transition: background 0.15s, color 0.15s;
+}
+
+.tagBadge:hover {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.tagActive {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.recentList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.recentLink {
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--muted);
+  transition: color 0.15s;
+  display: block;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.recentLink:hover { color: var(--fg); }

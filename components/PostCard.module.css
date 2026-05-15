@@ -1,0 +1,138 @@
+.card {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 1rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+.card:hover {
+  background: var(--card-bg);
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
+
+.featured {
+  grid-template-columns: 1fr;
+  padding: 0;
+  border: 1px solid var(--fg);
+  margin-bottom: 1.5rem;
+}
+
+.featured:hover {
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.imageWrap {
+  display: block;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s;
+}
+
+.card:hover .image {
+  transform: scale(1.03);
+}
+
+.featured .imageWrap {
+  border-bottom: 1px solid var(--fg);
+}
+
+.featured .image {
+  height: 220px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.featured .content {
+  padding: 1.2rem;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.category {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: var(--fg);
+  color: var(--bg);
+  padding: 0.1rem 0.4rem;
+}
+
+.date {
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  transition: opacity 0.15s;
+}
+
+.featured .title {
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+}
+
+.title:hover { opacity: 0.6; }
+
+.excerpt {
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.2rem;
+}
+
+.tag {
+  font-size: 0.65rem;
+  border: 1px solid var(--border);
+  padding: 0.1rem 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.readMore {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: auto;
+  padding-top: 0.3rem;
+  transition: opacity 0.15s;
+}
+
+.readMore:hover { opacity: 0.5; }
