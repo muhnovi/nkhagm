@@ -22,7 +22,17 @@ export default function PostCard({
     <article className={`${styles.card} ${featured ? styles.featured : ''}`}>
       {coverImage && (
         <Link href={`/blog/${slug}`} className={styles.imageWrap}>
-          <img src={coverImage} alt={title} className={styles.image} />
+          <Image
+            src={coverImage}
+            alt={title}
+            fill
+            sizes={featured
+              ? '(max-width: 768px) 100vw, 700px'
+              : '(max-width: 768px) 100vw, 260px'}
+            className={styles.image}
+            priority={featured}   /* LCP image di-load lebih awal */
+            style={{ objectFit: 'cover' }}
+          />
         </Link>
       )}
       <div className={styles.content}>

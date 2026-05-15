@@ -1,17 +1,43 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  // Aktifkan ini agar Next.js 16 tahu kamu sengaja pakai Webpack
-  turbopack: {}, 
-// 1. PINDAHKAN KE SINI (Top Level)
-  // Jangan ditaruh di dalam 'experimental' lagi
-  allowedDevOrigins: ['192.168.1.7', 'localhost:3000'],
-  webpack: (config: { ignoreWarnings: { module: RegExp; }[]; }) => {
-    // 1. Tambahkan konfigurasi (misal: abaikan peringatan gRPC/Protobuf)
-    config.ignoreWarnings = [
-      { module: /node_modules\/@protobufjs\/inquire\/index\.js/ },
-    ];
+import type { NextConfig } from 'next'
 
-    // 2. WAJIB: Kembalikan objek config yang sudah dimodifikasi
-    return config; 
+const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+    ],
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 86400,
   },
-};
+
+  async headers() {
+    return [
+      {
+        source: '/fonts/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/:path*.{jpg,jpeg,png,gif,webp,svg,ico}',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=604800, stale-while-revalidate=86400' },
+        ],
+      },
+    ]
+  },
+
+  compress: true,
+}
+
+export default nextConfig

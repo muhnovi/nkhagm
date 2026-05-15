@@ -6,18 +6,17 @@ import PostCard from '@/components/PostCard'
 import Sidebar from '@/components/Sidebar'
 import styles from './page.module.css'
 
-// Definisikan Interface agar TypeScript mengenali struktur data kita
 interface Post {
-  id: string;
-  title: string;
-  published: boolean;
-  publishedAt: Date;
-  category?: string;
-  tags?: string[];
-  slug?: string;
-  excerpt?: string;
-  coverImage?: string;
-  _sortTime: number;
+  id: string
+  title: string
+  published: boolean
+  publishedAt: Date
+  category?: string
+  tags?: string[]
+  slug?: string
+  excerpt?: string
+  coverImage?: string
+  _sortTime: number
 }
 
 export default function HomePage() {
@@ -27,26 +26,20 @@ export default function HomePage() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        // 1. Ambil data dari koleksi 'posts'
         const snap = await getDocs(collection(db, 'posts'))
-        
         const data = snap.docs
           .map(doc => {
             const d = doc.data()
             return {
-              ...d, // Memasukkan semua field dari Firestore (termasuk 'published')
+              ...d,
               id: doc.id,
-              // Konversi Timestamp ke Date JS
               publishedAt: d.publishedAt?.toDate() || d.createdAt?.toDate() || new Date(),
               _sortTime: d.publishedAt?.seconds || d.createdAt?.seconds || 0,
-            } as Post // Cast ke interface Post
+            } as Post
           })
-          // 2. Filter hanya yang sudah di-set published: true
           .filter(p => p.published === true)
-          // 3. Urutkan dari yang terbaru
           .sort((a, b) => b._sortTime - a._sortTime)
           .slice(0, 10)
-
         setPosts(data)
       } catch (err: any) {
         console.error('Fetch posts error:', err.message)
@@ -54,7 +47,6 @@ export default function HomePage() {
         setLoading(false)
       }
     }
-
     fetchPosts()
   }, [])
 
@@ -63,7 +55,6 @@ export default function HomePage() {
 
   return (
     <div className={styles.page}>
-      {/* Banner Utama */}
       <div className={styles.heroBanner}>
         <span className={styles.heroText}>BLOG &amp; BERITA TERKINI</span>
       </div>
@@ -71,14 +62,12 @@ export default function HomePage() {
       <div className={styles.layout}>
         <div className={styles.main}>
           {loading ? (
-            /* State Loading / Skeleton */
             <div className={styles.loadingState}>
               <div className={styles.skeleton} style={{ height: '280px' }} />
               <div className={styles.skeleton} style={{ height: '90px', marginTop: '1rem' }} />
               <div className={styles.skeleton} style={{ height: '90px', marginTop: '0.75rem' }} />
             </div>
           ) : posts.length === 0 ? (
-            /* State Jika Kosong */
             <div className={styles.emptyState}>
               <p>Belum ada artikel yang dipublikasikan.</p>
               <p style={{ fontSize: '0.75rem', marginTop: '0.5rem', opacity: 0.6 }}>
@@ -86,7 +75,6 @@ export default function HomePage() {
               </p>
             </div>
           ) : (
-            /* Render Artikel */
             <>
               {featured && (
                 <PostCard
@@ -100,7 +88,6 @@ export default function HomePage() {
                   featured
                 />
               )}
-              
               <div className={styles.postList}>
                 {rest.map((post) => (
                   <PostCard
@@ -119,9 +106,6 @@ export default function HomePage() {
           )}
         </div>
 
-        {/* WAJIB: Sidebar menggunakan useSearchParams, 
-          maka harus dibungkus Suspense agar build sukses 
-        */}
         <Suspense fallback={<div className={styles.loadingSidebar}>Memuat Sidebar...</div>}>
           <Sidebar />
         </Suspense>

@@ -17,12 +17,12 @@
   border: 1px solid var(--fg);
   margin-bottom: 1.5rem;
   overflow: hidden;
+  position: relative;
+  height: 360px;
 }
 
+/* Next/Image fill - object-fit diset via style prop */
 .cover {
-  width: 100%;
-  height: 360px;
-  object-fit: cover;
   display: block;
 }
 

@@ -16,16 +16,23 @@ const FontContext = createContext<FontContextType>({
 
 export function FontProvider({ children }: { children: ReactNode }) {
   const [font, setFont] = useState<FontType>('grotesk')
+  // Tandai apakah sudah mounted di client
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    // Baca localStorage hanya setelah mount di client
     const saved = localStorage.getItem('preferredFont') as FontType
-    if (saved) setFont(saved)
+    if (saved === 'grotesk' || saved === 'mono') {
+      setFont(saved)
+    }
+    setMounted(true)
   }, [])
 
   useEffect(() => {
+    if (!mounted) return
     document.documentElement.setAttribute('data-font', font)
     localStorage.setItem('preferredFont', font)
-  }, [font])
+  }, [font, mounted])
 
   const toggleFont = () => {
     setFont(prev => (prev === 'grotesk' ? 'mono' : 'grotesk'))

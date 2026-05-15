@@ -35,15 +35,17 @@ export default function Navbar() {
         </div>
 
         <div className={styles.controls}>
-          {/* Font Toggle */}
+          {/* Font Toggle — suppressHydrationWarning mencegah error saat
+              server render 'grotesk' tapi client baca 'mono' dari localStorage */}
           <button
             onClick={toggleFont}
             className={styles.fontToggle}
             title={`Switch to ${font === 'grotesk' ? 'Mono' : 'Grotesk'}`}
+            suppressHydrationWarning
           >
-            <span className={font === 'grotesk' ? styles.fontActive : ''}>Aa</span>
+            <span className={font === 'grotesk' ? styles.fontActive : ''} suppressHydrationWarning>Aa</span>
             <span className={styles.separator}>/</span>
-            <span className={font === 'mono' ? styles.fontActive : styles.fontMono}>Aa</span>
+            <span className={font === 'mono' ? styles.fontActive : styles.fontMono} suppressHydrationWarning>Aa</span>
           </button>
 
           {/* Mobile Hamburger */}
