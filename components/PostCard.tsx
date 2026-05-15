@@ -27,10 +27,12 @@ export default function PostCard({
             alt={title}
             fill
             sizes={featured
-              ? '(max-width: 768px) 100vw, 700px'
-              : '(max-width: 768px) 100vw, 260px'}
+              ? '(max-width: 768px) 100vw, 680px'
+              : '(max-width: 768px) 120px, 120px'}
             className={styles.image}
-            priority={featured}   /* LCP image di-load lebih awal */
+            // featured = artikel pertama = kemungkinan besar LCP element
+            priority={featured}
+            loading={featured ? 'eager' : 'lazy'}
             style={{ objectFit: 'cover' }}
           />
         </Link>

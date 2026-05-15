@@ -17,7 +17,14 @@ export default function RootLayout({
   return (
     <html lang="id" data-font="grotesk">
       <head>
-        {/* Preload font utama agar tidak blocking render */}
+        {/* Preconnect ke domain eksternal — browser buka koneksi lebih awal
+            sehingga gambar & API tidak nunggu DNS + TCP + TLS handshake */}
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link rel="preconnect" href="https://firestore.googleapis.com" />
+        <link rel="preconnect" href="https://www.googleapis.com" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+
+        {/* Preload hanya font utama yang pasti dipakai */}
         <link
           rel="preload"
           href="/fonts/SpaceGrotesk-Regular.ttf"
