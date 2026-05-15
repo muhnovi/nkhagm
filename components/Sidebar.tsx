@@ -59,8 +59,8 @@ export default function Sidebar() {
     setEmail('')
   }
 
-  const defaultCategories = ['Berita', 'Tutorial', 'Panduan', 'Tips', 'Opini']
-  const defaultTags = ['Teknologi', 'Pendidikan', 'Bisnis', 'Sains', 'Budaya']
+  const defaultCategories = ['Berita', 'Tutorial', 'Panduan', 'Tips', 'Opini', 'Pendidikan', 'Lainnya']
+  const defaultTags = ['Tutorial', 'Berita']
 
   const displayCategories = categories.length > 0 ? categories : defaultCategories
   const displayTags = tags.length > 0 ? tags : defaultTags
