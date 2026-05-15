@@ -1,5 +1,4 @@
 'use client'
-import './globals.css'
 import { useEffect, useState, Suspense } from 'react'
 import { collection, getDocs } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
